@@ -1,0 +1,63 @@
+= Introducing Autocode 
+
+Autocode makes it relatively easy to automatically (re)load or even generate classes and modules on the fly. You can use it like this:
+
+  require 'autocode'
+  
+  module Application
+    extend Autoload
+    autoload true
+    directories :configurations, :models, :views, :controllers
+  end
+  
+This will attempt to load code dynamically from the given directories, using the module name to determine which directory to look in. Thus, <tt>Application::CustomerModel</tt> could load the file <tt>models/customer_model.rb</tt>.
+
+== Reloading Code
+
+To make code reloadable (very useful when debugging running processes), simply extend Reloadable. Thus, our above example would become:
+
+  require 'autocode'
+
+  module Application
+    extend Autoload; extend Reloadable
+    autoload true
+    directories :configurations, :models, :views, :controllers
+  end
+  
+Then, later on, we can simply call <tt>Application.reload</tt> to reload all the code that was loaded via *Autocode*. *Important*: Only code loaded via *Autocode* (Autoload or Autocreate) will be reloaded.
+
+== Autocreation
+
+Sometimes it's useful to generate defaults for classes or modules that don't exist. This can be particularly powerful when used in combination with autoloading.
+
+  require 'autocode'
+
+  module Application
+    extend Autocreate; extend Reloadable
+    [ [ :Configurations, :configurations ], 
+      [ :Models, :models ],
+      [ :Views, :views ],
+      [ :Controllers, :controllers ] ].each |mod_name, dir_name| do
+      autocreate mod_name, Module.new do 
+        extend Autoload
+        autoload true
+        directories dir_name
+      end
+    end
+  end
+
+This will autocreate the modules Configurations, Models, Views, and Controllers within the Application module, as they are referenced, based on the exemplar Module configured to autoload code from the configurations, models, views, and controllers directories.
+
+For example, referencing <tt>Application::Models::Customer</tt> will cause the file <tt>models/customer.rb</tt> to be loaded.
+
+== Other Uses
+
+Autoloading and autocreation, along with reloading, can be used to provide sophisticated rules for loading and even generating modules and classes within a given module. These capabilities are increasingly found within frameworks like Rails and Camping, but *Autocode* makes it possible to mixin these capabilities into any situation and precisely control how they are applied.
+
+== Support
+
+If you have questions or comments, please go to the *Autocode* Web site first at http://code.google.com/p/ruby-autocode/.
+
+(c) 2007 Dan Yoder
+
+Licensed under the MIT License.
