@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rake/rdoctask'
+require 'rake/testtask'
 require 'fileutils'
 
 Gem::manage_gems
@@ -38,4 +39,10 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'doc/rdoc'
   rdoc.options << '--line-numbers'
   rdoc.rdoc_files.add([ 'README', 'lib/*.rb' ])
+end
+
+Rake::TestTask.new(:test) do |t|
+  t.test_files = FileList["test/*.rb"].exclude("test/helpers.rb", "test_lib/**/*
+")
+  t.verbose = true
 end

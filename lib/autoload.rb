@@ -51,11 +51,17 @@ module Autoload
 				return old.call(cname) unless autoload?( cname )
 				fname = ( cname.to_s.gsub(/([a-z\d])([A-Z])/){ "#{$1}_#{$2.downcase}"} + '.rb' ).downcase
 				dir = ( @directories ||= ['.'] ).find do |dir|
-					File.exist?( dir / fname )
+					File.exist?( File.join(dir.to_s, fname) )
 				end
 				
-				if ( dir && load( dir / fname ) && c = const_get( cname ) )
-					( @reloadable ||= [] ) << cname; return c
+				if ( dir && load( File.join(dir.to_s, fname) ) && c = const_get( cname ) )
+					( @reloadable ||= [] ) << cname;
+					
+					@autodef.select { |k,v| k.to_s == cname.to_s }.each do |k,bl|
+  					c.module_eval( &bl) if bl
+					end
+					
+					return c
 				else 
 					old.call( cname )
 				end

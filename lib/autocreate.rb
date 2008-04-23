@@ -21,6 +21,10 @@ module Autocreate
 				( @autocreate ||= [] ) << [ key, exemplar, block ]
 				return self
 			end
+			
+			def autodefines(key)
+			  @autodef.select { |k,v| k == key }
+			end
 
 			define_method :const_missing do | cname | #:nodoc:
 
@@ -40,6 +44,11 @@ module Autocreate
 					( @reloadable ||= [] ) << cname; 
 					const_set( cname, object )
 					object.instance_eval( &block ) if block
+					
+					@autodef.select { |k,v| k.to_s == cname.to_s }.each do |k,bl|
+					  object.module_eval( &bl) if bl
+					end
+					
 					return object
 				else
 					old.call(cname)

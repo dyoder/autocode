@@ -50,6 +50,25 @@ This will autocreate the modules Configurations, Models, Views, and Controllers 
 
 For example, referencing <tt>Application::Models::Customer</tt> will cause the file <tt>models/customer.rb</tt> to be loaded.
 
+== Autodefinition
+
+If you do configuration or method definition for a reloadable class or module, unless your code is in an autoloading file, it will get clobbered upon reload.  You can work around this with autodef, which registers blocks against constant names so that autocreate and autoload can run them after object creation.
+
+require 'autocode'
+
+module Application
+  extend Autodef
+  autodef(:Configurations) do
+    def self.upcase_name; name.upcase ; end
+  end
+
+  autodef('Models::Doodad') do
+    def self.create_broken; new(:working => false); end
+    def part_number; 12345 ; end
+  end
+  
+end
+
 == Other Uses
 
 Autoloading and autocreation, along with reloading, can be used to provide sophisticated rules for loading and even generating modules and classes within a given module. These capabilities are increasingly found within frameworks like Rails and Camping, but *Autocode* makes it possible to mixin these capabilities into any situation and precisely control how they are applied.
