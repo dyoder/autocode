@@ -56,11 +56,13 @@ module Autoload
 				
 				if ( dir && load( File.join(dir.to_s, fname) ) && c = const_get( cname ) )
 					( @reloadable ||= [] ) << cname;
-					
-					@autodef.select { |k,v| k.to_s == cname.to_s }.each do |k,bl|
-  					c.module_eval( &bl) if bl
-					end
-					
+          
+          # if @autodef
+            @autodef.select { |k,v| k.to_s == cname.to_s }.each do |k,bl|
+              c.module_eval( &bl) if bl
+            end
+          # end
+          
 					return c
 				else 
 					old.call( cname )

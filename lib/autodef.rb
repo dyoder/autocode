@@ -16,7 +16,7 @@ module Autodef
     			 ( @autodef ||= [] ) << [ match[2], block ]  
     			end
   			else
-    			( @autodef ||= [] ) << [ key, block ]          
+    			( @autodef ||= [] ) << [ key, block ]
   			end
   			return self
   		end
