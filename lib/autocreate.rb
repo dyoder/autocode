@@ -22,10 +22,6 @@ module Autocreate
 				return self
 			end
 			
-			def autodefines(key)
-			  @autodef.select { |k,v| k == key }
-			end
-
 			define_method :const_missing do | cname | #:nodoc:
 
 				# first, find an applicable exemplar	
