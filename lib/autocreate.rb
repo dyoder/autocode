@@ -41,11 +41,11 @@ module Autocreate
 					const_set( cname, object )
 					object.instance_eval( &block ) if block
           
-          # if @autodef
+          if @autodef
             @autodef.select { |k,v| k.to_s == cname.to_s }.each do |k,bl|
               object.module_eval( &bl) if bl
             end
-          # end
+          end
           
 					return object
 				else
