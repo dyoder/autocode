@@ -22,7 +22,8 @@ module Autoload
 		
 		mod.metaclass.class_eval do
 
-			# Specifies that you want to autoload each of the constants referenced by keys. A key of true is basically a wild-card, meaning "load anything". 
+			# Specifies that you want to autoload each of the constants referenced by keys. 
+      # A key of true is basically a wild-card, meaning "load anything". 
 			def autoload( *keys )
 				( @autoload ||= [] ).concat(keys)
 				return self

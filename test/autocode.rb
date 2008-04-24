@@ -14,21 +14,21 @@ describe "thingy" do
       end
     end
 
-    Thingy.module_eval do
-      extend Autodef
-      autodef(:Mabob) do
-        def self.in_scope; true; end
-      end
-
-      autodef('Mabob::Doodad') do
-        def self.outside_scope; true; end
-        def instance; true; end
-      end
-
-      autodef('Mabob::Doodad') do
-        def self.gizmo; 2; end
-      end
-    end
+    # Thingy.module_eval do
+    #   extend Autodef
+    #   autodef(:Mabob) do
+    #     def self.in_scope; true; end
+    #   end
+    # 
+    #   autodef('Mabob::Doodad') do
+    #     def self.outside_scope; true; end
+    #     def instance; true; end
+    #   end
+    # 
+    #   autodef('Mabob::Doodad') do
+    #     def self.gizmo; 2; end
+    #   end
+    # end
     
   end
   
@@ -48,15 +48,15 @@ describe "thingy" do
     lambda { Thingy::MooCow }.should.raise NameError
   end
   
-  it "should run the autodef blocks upon create and load" do
-    Thingy::Mabob.in_scope.should == true
-    Thingy::Mabob::Doodad.outside_scope.should == true
-    Thingy::Mabob::Doodad.new.instance
-  end
-  
-  it "should run autodef blocks after the file loading" do
-     Thingy::Mabob::Doodad.gizmo.should == 2
-  end
+  # it "should run the autodef blocks upon create and load" do
+  #   Thingy::Mabob.in_scope.should == true
+  #   Thingy::Mabob::Doodad.outside_scope.should == true
+  #   Thingy::Mabob::Doodad.new.instance
+  # end
+  # 
+  # it "should run autodef blocks after the file loading" do
+  #    Thingy::Mabob::Doodad.gizmo.should == 2
+  # end
   
   
 end
