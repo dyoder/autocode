@@ -1,5 +1,5 @@
 module Thingy
-  module Mabob
+  module Whatsit
     class Doodad
       def self.gizmo
         1

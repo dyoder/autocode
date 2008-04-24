@@ -1,25 +1,28 @@
 require 'rubygems'
 require 'metaid'
 
-module Autodef
+module Autoinit
 	
 	def self.extended( mod ) #:nodoc:
 		mod.metaclass.class_eval do
 
-  		# Specifies that the constant specified by key should be autocreated using the exemplar. If a block is given, the block is further used to initialize the block once it has been cloned.
   		def autodef( key, &block )
   		  match = key.to_s.match(/^(.*)::([\w\d_]+)$/)
   		  
   		  if match
   		    const = const_get(match[1])
     			const.module_eval do
-    			 ( @autodef ||= [] ) << [ match[2], block ]  
+    			 init_blocks << [ match[2], block ]  
     			end
   			else
-    			( @autodef ||= [] ) << [ key, block ]
+    			init_blocks << [ key, block ]
   			end
   			return self
   		end
+  		
+  		def init_blocks
+			 @init_blocks ||= Hash.new { |h,k| h[k] = [] }
+			end
 
 		end
 

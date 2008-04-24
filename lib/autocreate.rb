@@ -16,46 +16,44 @@ module Autocreate
 		old = mod.method( :const_missing )
 		mod.metaclass.class_eval do
 
-			# Specifies that the constant specified by key should be autocreated using the exemplar. If a block is given, the block is further used to initialize the block once it has been cloned.
+			# The constant specified by key should be autocreated using the exemplar.
+      # Any block given is added to the list of init_blocks, which will be executed
+      # in the constant's module scope after it is cloned.
 			def autocreate( key, exemplar, &block )
-			  # need to handle arrays as value of key
-				exemplars << [ key, exemplar ]
-				init_blocks[key] << block
+			  keys = case key
+		    when Symbol then [key]
+			  when Array  then key
+			  end
+			  
+			  keys.each do |k|
+			   	exemplars[k] = exemplar
+          init_blocks[k] << block
+			  end
+
 				return self
 			end
 			
-			def self.exemplars
-			  @exemplars || = []
+			def exemplars
+			  @exemplars ||= Hash.new
 			end
 			
-			def self.init_blocks
-			 @init_blocks ||= Hash.new([])
+			def init_blocks
+			 @init_blocks ||= Hash.new { |h,k| h[k] = [] }
 			end
 			
 			
 			define_method :const_missing do | cname | #:nodoc:
-        constant_sym = cname.to_sym
-        key, exemplar = exemplars.detect { |k,e| k == true || k == constant_sym  }
-        
-				# first, find an applicable exemplar
-        # key, exemplar, block = ( @autocreate ||= [] ).find do |k,v|
-        #   case k
-        #     when true then true
-        #     when String, Symbol then k.to_s == cname.to_s 
-        #     when Array then k.find { |k| k.to_s == cname.to_s }
-        #     else false
-        #   end
-        # end
+        cname = cname.to_sym
+        exemplar = ( exemplars[cname] ? exemplars[cname] : exemplars[true]  )
 
-				# if we found it, set the const and return it
-				if key 
+				# if we found it, set the constant, run the blocks, and return it
+				if exemplar 
 					object = exemplar.clone
 					( @reloadable ||= [] ) << cname; 
 					const_set( cname, object )
-          # object.instance_eval( &block ) if block
           
-          init_blocks[cname].each do |k,bl|
-            object.module_eval( &bl) if bl
+          init_blocks[cname].each do |block|
+            object.module_eval( &block) if block
           end
           
 					return object
