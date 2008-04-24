@@ -11,7 +11,7 @@ module Autoinit
   		  match = key.to_s.match(/^(.*)::([\w\d_]+)$/)
   		  
   		  if match
-  		    const = q_const_get(match[1])
+  		    const = module_eval(match[1])
     			const.module_eval do
     			  @init_blocks ||= Hash.new { |h,k| h[k] = [] }
     			  @init_blocks[match[2].to_sym] << block
