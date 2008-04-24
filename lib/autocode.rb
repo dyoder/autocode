@@ -1,4 +1,5 @@
+require 'module'
 require 'autocreate'
 require 'autoload'
-require 'autodef'
+require 'autoinit'
 require 'reloadable'

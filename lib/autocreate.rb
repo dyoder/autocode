@@ -44,7 +44,7 @@ module Autocreate
 			
 			define_method :const_missing do | cname | #:nodoc:
         cname = cname.to_sym
-        exemplar = ( exemplars[cname] ? exemplars[cname] : exemplars[true]  )
+        exemplar = exemplars[cname] || exemplars[true]
 
 				# if we found it, set the constant, run the blocks, and return it
 				if exemplar 

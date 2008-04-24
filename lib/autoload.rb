@@ -58,9 +58,9 @@ module Autoload
 				if ( dir && load( File.join(dir.to_s, fname) ) && c = const_get( cname ) )
 					( @reloadable ||= [] ) << cname;
           
-          if @autodef
-            @autodef.select { |k,v| k.to_s == cname.to_s }.each do |k,bl|
-              c.module_eval( &bl) if bl
+          if @init_blocks
+            @init_blocks[cname].each do |block|
+              c.module_eval( &block) if block
             end
           end
           

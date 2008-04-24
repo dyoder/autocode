@@ -1,6 +1,6 @@
 module Thingy
-  module Mabob
-    class Doodad
+  module Whatsit
+    class Critter
       def self.gizmo
         1
       end
