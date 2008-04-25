@@ -8,13 +8,17 @@ module Autoinit
 
   		def autoinit( key, &block )
   		  
+  		  # See whether we're dealing with a namespaced constant,
+  		  # The match groupings for,  e.g. "X::Y::Z", would be
+  		  # ["X::Y", "Z"]
   		  match = key.to_s.match(/^(.*)::([\w\d_]+)$/)
   		  
   		  if match
-  		    const = module_eval(match[1])
+  		    namespace, cname = match[1,2]
+  		    const = module_eval(namespace)
     			const.module_eval do
     			  @init_blocks ||= Hash.new { |h,k| h[k] = [] }
-    			  @init_blocks[match[2].to_sym] << block
+    			  @init_blocks[cname.to_sym] << block
     			end
   			else
   			  @init_blocks ||= Hash.new { |h,k| h[k] = [] }
