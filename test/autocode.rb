@@ -35,7 +35,7 @@ describe "thingy" do
   end
   
   it "should autoload where files match" do  
-    lambda { Thingy::Mabob::Doodad.should.respond_to :gizmo }.should.not.raise
+    lambda { Thingy::Mabob::DooDad.should.respond_to :gizmo }.should.not.raise
   end
   
   it "should not autocreate those unmentioned and fileable" do
