@@ -1,4 +1,3 @@
-require 'module'
 require 'autocreate'
 require 'autoload'
 require 'autoinit'
