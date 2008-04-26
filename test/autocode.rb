@@ -6,8 +6,7 @@ describe "thingy" do
       extend Autocreate; extend Reloadable
       module Mabob
         extend Autoload
-        autoload true
-        directories :test_lib
+        autoload true, :type => Class, :directories => :test_lib
       end
     end
   end
@@ -35,7 +34,7 @@ describe "thingy" do
   end
   
   it "should autoload where files match" do  
-    lambda { Thingy::Mabob::DooDad.should.respond_to :gizmo }.should.not.raise
+    Thingy::Mabob::DooDad.should.respond_to :gizmo
   end
   
   it "should not autocreate those unmentioned and fileable" do
@@ -46,8 +45,7 @@ describe "thingy" do
     module Thingy
       autocreate(:Whatsit, Module.new) do
         extend Autoload
-        autoload :Critter
-        directories :test_lib
+        autoload :Critter, :type => Class, :directories => :test_lib
       end
       
       extend Autoinit

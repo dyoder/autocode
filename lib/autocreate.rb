@@ -21,6 +21,7 @@ module Autocreate
       # in the constant's module scope after it is cloned.
 			def autocreate( key, exemplar, &block )
 			  keys = case key
+		    when true then [true]
 		    when Symbol then [key]
 			  when Array  then key
 			  end
