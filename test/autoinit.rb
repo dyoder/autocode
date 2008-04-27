@@ -9,7 +9,6 @@ describe "thingy" do
         autoload :Critter, :type => Class, :directories => File.join(File.dirname(__FILE__), "test_lib")
       end
       
-      extend Autocode
       autoinit(:Whatsit) do
         def self.in_scope; true; end
       end
