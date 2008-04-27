@@ -1,6 +1,3 @@
-# require 'autocreate'
-# require 'autoload'
-# require 'autoinit'
 require 'reloadable'
 
 module Autocode
@@ -12,9 +9,8 @@ module Autocode
 		  
 		  def autocreate( key, exemplar, &block )
 			  keys = case key
-		    when true then [true]
-		    when Symbol then [key]
-			  when Array  then key
+		    when true, Symbol then [key]
+			  when Array then key
 			  end
 			  
 			  keys.each do |k|
@@ -60,20 +56,16 @@ module Autocode
 		  end
 		  
 		  
-		  
-		  
 		  define_method :const_missing do | cname | #:nodoc:
         cname = cname.to_sym
         exemplar = exemplars[cname] || exemplars[true]
         blocks = init_blocks[cname]
         blocks = init_blocks[true] + blocks if exemplars[cname].nil? && init_blocks[true]
-        load_file, load_class = load_files[cname] || load_files[true]
+        load_file_finder, load_class = load_files[cname] || load_files[true]
         
-
-				# if we found it, set the constant, run the blocks, and return it
 				if exemplar 
 					object = exemplar.clone
-			  elsif filename = load_file.call(cname)
+			  elsif filename = load_file_finder.call(cname)
 			    object = load_class.new.clone
 		    else
 		      return old.call(cname)
@@ -89,6 +81,7 @@ module Autocode
 				return object
 			end
 			
+			# helper methods.  May need to make them  private.
 			def exemplars
 			  @exemplars ||= Hash.new
 			end
@@ -101,15 +94,13 @@ module Autocode
 			  @load_files ||= Hash.new
 			end
 			
-			def default_file_name(cname)
-			 ( cname.to_s.gsub(/([a-z\d])([A-Z\d])/){ "#{$1}_#{$2}"} << ".rb" ).downcase
-			end
-			
 			def reloadable
 			 @reloadable ||= []
 			end
-		  
-		  
+			
+			def default_file_name(cname)
+			 ( cname.to_s.gsub(/([a-z\d])([A-Z\d])/){ "#{$1}_#{$2}"} << ".rb" ).downcase
+			end
 		  
 	  end
   end
