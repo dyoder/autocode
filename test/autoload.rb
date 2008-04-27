@@ -6,7 +6,7 @@ describe "A module where autoload has been called" do
     module Thingy
       module Mabob
         extend Autocode
-        autoload true, :type => Class, :directories => [File.join(File.dirname(__FILE__), "test_lib")]
+        autoload true, :exemplar => Class.new, :directories => [File.join(File.dirname(__FILE__), "test_lib")]
       end
     end
   end

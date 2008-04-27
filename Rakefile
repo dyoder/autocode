@@ -13,6 +13,7 @@ spec = Gem::Specification.new do |s|
 	s.required_ruby_version = '>= 1.8.6'
 	s.name = "autocode"
 	s.version = "0.9.3"
+	s.authors = ["Dan Yoder", "Matthew King"]
 	s.homepage = 'http://dev.zeraweb.com/'
 	s.add_dependency 'metaid'
 	s.summary	= "Utility for auto-including, reloading, and generating classes and modules."

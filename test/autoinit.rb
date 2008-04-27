@@ -6,7 +6,7 @@ describe "thingy" do
       extend Autocode
       autocreate(:Whatsit, Module.new) do
         extend Autocode
-        autoload :Critter, :type => Class, :directories => File.join(File.dirname(__FILE__), "test_lib")
+        autoload :Critter, :exemplar => Class.new, :directories => File.join(File.dirname(__FILE__), "test_lib")
       end
       
       autoinit(:Whatsit) do

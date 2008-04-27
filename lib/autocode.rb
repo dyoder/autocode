@@ -51,7 +51,7 @@ module Autocode
   			  end
   			  dirname ? File.join(dirname.to_s, filename) : nil
         end
-        load_files[key] = [file_finder, options[:type]]
+        load_files[key] = [file_finder, options[:exemplar]]
 				return self
 		  end
 		  
@@ -63,15 +63,15 @@ module Autocode
         blocks = init_blocks[true] + blocks if exemplars[cname].nil? && init_blocks[true]
         load_file_finder, load_class = load_files[cname] || load_files[true]
         
-				if exemplar 
+			  if load_file_finder && filename = load_file_finder.call(cname)
+			    object = load_class.clone
+				elsif exemplar 
 					object = exemplar.clone
-			  elsif filename = load_file_finder.call(cname)
-			    object = load_class.new.clone
 		    else
 		      return old.call(cname)
 	      end
 			  			    
-				reloadable << cname; 
+				(@reloadable ||= []) << cname; 
 				const_set( cname, object )
          
         blocks.each do |block|
