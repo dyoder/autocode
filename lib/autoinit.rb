@@ -7,7 +7,6 @@ module Autoinit
 		mod.metaclass.class_eval do
 
   		def autoinit( key, &block )
-  		  
   		  # See whether we're dealing with a namespaced constant,
   		  # The match groupings for,  e.g. "X::Y::Z", would be
   		  # ["X::Y", "Z"]
