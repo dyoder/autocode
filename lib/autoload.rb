@@ -20,7 +20,7 @@ module Autoload
 
 		old = mod.method( :const_missing )
 		mod.module_eval do
-		  extend Autocreate
+      # extend Autocreate
 	  end
 		
 		mod.metaclass.class_eval do
@@ -35,36 +35,52 @@ module Autoload
         #   @autoload[key] = true
         #         end
         # directories(options[:directories])
-        autocreate(key, (options[:type] || Module).new ) do |cname|
-          autoload_file(Autoload.default_file_name(cname, options[:directories]))
+        
+        # autocreate(key, (options[:type] || Module).new ) do |cname|
+        #   Autoload.autoload_file(Autoload.default_file_name(cname), [options[:directories]].flatten)
+        # end
+        
+        directories = [options[:directories]].flatten
+        # create a lambda that looks for a file to load
+        file_finder = lambda do |cname|
+          filename = default_file_name(cname)
+          dirname = directories.find do |dir|
+  			    File.exist?(File.join(dir.to_s, filename))
+  			  end
+  			  File.join(dirname.to_s, filename)
         end
+        load_files[key] = [options[:type], file_finder]
 				return self
+			end
+			
+			def load_files
+			  @load_files ||= Hash.new
 			end
 			
 			# Provide a list of directories from which a given constant might be loaded.
-			def directories( *dirs )
-				( @directories ||= ['.'] ).concat(dirs)
-				return self
-			end
+      # def directories( *dirs )
+      #   ( @directories ||= ['.'] ).concat(dirs)
+      #   return self
+      # end
 			
-			def Autoload.default_file_name(cname)
+			def default_file_name(cname)
 			 ( cname.to_s.gsub(/([a-z\d])([A-Z\d])/){ "#{$1}_#{$2}"} << ".rb" ).downcase
 			end
 			
-			# Is a given constant being autoloaded?
-			def autoload?( cname )
-			  # A value of false for a specific key overrides the more general key of true.
-			  # This is useful in preventing infinite recursion.
-			  return false if @autoload[false]
-				@autoload[cname] || @autoload[true]
-			end
+      # # Is a given constant being autoloaded?
+      # def autoload?( cname )
+      #   # A value of false for a specific key overrides the more general key of true.
+      #   # This is useful in preventing infinite recursion.
+      #   return false if @autoload[false]
+      #   @autoload[cname] || @autoload[true]
+      # end
 			
-			def autoload_file(filename, dirs)
-			  dirname = (dirs ||= ['.']).find do |dir|
-			    File.exist?(File.join(dir.to_s, filename))
-			  end
-			  dirname && (file = File.join(dirname.to_s, filename)) && load(file)
-			end
+      # def Autoload.autoload_file(filename, dirs)
+      #   dirname = (dirs ||= ['.']).find do |dir|
+      #     File.exist?(File.join(dir.to_s, filename))
+      #   end
+      #   dirname && (file = File.join(dirname.to_s, filename)) && load(file)
+      # end
 
       # define_method :const_missing do | cname | #:nodoc:
       #   return old.call(cname) unless autoload?( cname )
