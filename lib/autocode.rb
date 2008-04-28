@@ -42,7 +42,9 @@ module Autocode
   		end
 		  
 		  def autoload( key, options )
-		    directories = [options[:directories]].flatten
+		    # look for load_files in either a specified directory, or in the directory
+		    # with the snakecase name of the enclosing module
+		    directories = [options[:directories] || default_directory(self.name)].flatten
         # create a lambda that looks for a file to load
         file_finder = lambda do |cname|
           filename = default_file_name(cname)
@@ -51,8 +53,14 @@ module Autocode
   			  end
   			  dirname ? File.join(dirname.to_s, filename) : nil
         end
-        load_files[key] = [file_finder, options[:exemplar]]
+        # if no exemplar is given, assume Module.new
+        load_files[key] = [file_finder, options[:exemplar] || Module.new]
 				return self
+		  end
+		  
+		  def autoload_class(key, superclass=nil, options={})
+		    options[:exemplar] = Class.new(superclass)
+		    autoload key, options
 		  end
 		  
 		  
@@ -100,6 +108,11 @@ module Autocode
 			
 			def default_file_name(cname)
 			 ( cname.to_s.gsub(/([a-z\d])([A-Z\d])/){ "#{$1}_#{$2}"} << ".rb" ).downcase
+			end
+			
+			def default_directory(module_name)
+			  m = self.name.match( /^.*::([\w\d_]+)$/)
+			  m[1].snake_case
 			end
 		  
 	  end
