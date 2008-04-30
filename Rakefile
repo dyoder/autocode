@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'date'
 require 'rake/rdoctask'
 require 'rake/testtask'
 require 'fileutils'
@@ -13,7 +14,7 @@ spec = Gem::Specification.new do |s|
 	s.required_ruby_version = '>= 1.8.6'
 	s.name = "autocode"
 	s.version = "0.9.3"
-	s.authors = ["Dan Yoder", "Matthew King"]
+	s.authors = ["Dan Yoder"]
 	s.homepage = 'http://dev.zeraweb.com/'
 	s.add_dependency 'metaid'
 	s.summary	= "Utility for auto-including, reloading, and generating classes and modules."
@@ -34,6 +35,14 @@ end
 
 task :install => :package do
 	system 'sudo gem install ./*.gem'
+end
+
+desc "create .gemspec file (useful for github)"
+task :gemspec do
+  filename = "#{spec.name}.gemspec"
+  File.open(filename, "w") do |f|
+    f.puts spec.to_ruby
+  end
 end
 
 Rake::RDocTask.new do |rdoc|
