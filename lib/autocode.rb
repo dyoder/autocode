@@ -54,12 +54,17 @@ module Autocode
   			  dirname ? File.join(dirname.to_s, filename) : nil
         end
         # if no exemplar is given, assume Module.new
-        load_files[key] = [file_finder, options[:exemplar] || Module.new]
+        load_files[key] = [file_finder, options[:exemplar]]
 				return self
 		  end
 		  
 		  def autoload_class(key, superclass=nil, options={})
 		    options[:exemplar] = Class.new(superclass)
+		    autoload key, options
+		  end
+		  
+		  def autoload_module(key, options={})
+		    options[:exemplar] = Module.new
 		    autoload key, options
 		  end
 		  
