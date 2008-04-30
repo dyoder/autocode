@@ -13,9 +13,11 @@ module Autocode
 			  when Array then key
 			  end
 			  
+			  @exemplars ||= Hash.new
+			  @init_blocks ||= Hash.new { |h,k| h[k] = [] }
 			  keys.each do |k|
-			   	exemplars[k] = exemplar
-          init_blocks[k] << block
+			   	@exemplars[k] = exemplar
+          @init_blocks[k] << block
 			  end
 
 				return self
@@ -26,16 +28,14 @@ module Autocode
   		  # The match groupings for,  e.g. "X::Y::Z", would be
   		  # ["X::Y", "Z"]
   		  match = key.to_s.match(/^(.*)::([\w\d_]+)$/)
-  		  
   		  if match
   		    namespace, cname = match[1,2]
   		    const = module_eval(namespace)
     			const.module_eval do
-    			  @init_blocks ||= Hash.new { |h,k| h[k] = [] }
+      		  @init_blocks ||= Hash.new { |h,k| h[k] = [] }
     			  @init_blocks[cname.to_sym] << block
     			end
   			else
-  			  @init_blocks ||= Hash.new { |h,k| h[k] = [] }
     			@init_blocks[key] << block
   			end
   			return self
@@ -54,7 +54,8 @@ module Autocode
   			  dirname ? File.join(dirname.to_s, filename) : nil
         end
         # if no exemplar is given, assume Module.new
-        load_files[key] = [file_finder, options[:exemplar]]
+			  @load_files ||= Hash.new
+        @load_files[key] = [file_finder, options[:exemplar]]
 				return self
 		  end
 		  
@@ -71,10 +72,13 @@ module Autocode
 		  
 		  define_method :const_missing do | cname | #:nodoc:
         cname = cname.to_sym
-        exemplar = exemplars[cname] || exemplars[true]
-        blocks = init_blocks[cname]
-        blocks = init_blocks[true] + blocks if exemplars[cname].nil? && init_blocks[true]
-        load_file_finder, load_class = load_files[cname] || load_files[true]
+        @exemplars ||= Hash.new
+        @init_blocks ||= Hash.new { |h,k| h[k] = [] }
+			  @load_files ||= Hash.new
+        exemplar = @exemplars[cname] || @exemplars[true]
+        blocks = @init_blocks[cname]
+        blocks = @init_blocks[true] + blocks if @exemplars[cname].nil? && @init_blocks[true]
+        load_file_finder, load_class = @load_files[cname] || @load_files[true]
         
 			  if load_file_finder && filename = load_file_finder.call(cname)
 			    object = load_class.clone
@@ -92,23 +96,6 @@ module Autocode
         end
         load(filename) if filename
 				return object
-			end
-			
-			# helper methods.  May need to make them  private.
-			def exemplars
-			  @exemplars ||= Hash.new
-			end
-			
-			def init_blocks
-			 @init_blocks ||= Hash.new { |h,k| h[k] = [] }
-			end
-		  
-		  def load_files
-			  @load_files ||= Hash.new
-			end
-			
-			def reloadable
-			 @reloadable ||= []
 			end
 			
 			def default_file_name(cname)
