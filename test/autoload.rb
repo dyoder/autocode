@@ -5,11 +5,15 @@ describe "A module where autoload has been called" do
   before do
     module Thingy
       module Mabob
-        extend Autocode
+        extend Autocode; extend Unloadable;
         autoload_class true, Class, :directories => [File.join(File.dirname(__FILE__), "test_lib")]
         autoload_module :Humbug, :directories => [File.join(File.dirname(__FILE__), "test_lib")]
       end
     end
+  end
+  
+  after do
+    Thingy::Mabob.unload
   end
 
   it "should autoload where files match" do  

@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), 'helpers.rb')
 describe "A module where autocreate has been called" do
   before do
     module Thingy
-      extend Autocode
+      extend Autocode; extend Unloadable;
       autocreate :Tom, Module.new do
         def self.peeps; true; end 
       end
@@ -14,6 +14,10 @@ describe "A module where autocreate has been called" do
     end
   end
   
+  after do
+    Thingy.unload
+  end
+
   it "should autocreate some constants" do
     Thingy::Tom.peeps.should == true
     Thingy::Dick.peeps.should == false
@@ -26,13 +30,14 @@ describe "A module where autocreate has been called" do
   
   it "unless autocreate was called with key of true" do
     module Duffel
-      extend Autocode
+      extend Autocode; extend Unloadable;
       autocreate true, Class.new do
         def self.universal; true; end
       end
     end
     
     Duffel::AnyThing.universal.should == true
+    Duffel.unload
   end
   
 end
