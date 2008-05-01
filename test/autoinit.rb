@@ -38,10 +38,10 @@ describe "thingy" do
   end
   
   after do
-    Thingy::Whatsit.autounload    
-    Thingy::Big::Bad.autounload
-    Thingy::Big.autounload
-    Thingy.autounload    
+    Thingy::Whatsit.unload    
+    Thingy::Big::Bad.unload
+    Thingy::Big.unload
+    Thingy.unload    
   end  
   
   it "fdfdsf" do

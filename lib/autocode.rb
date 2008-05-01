@@ -69,24 +69,24 @@ module Autocode
 		    autoload key, options
 		  end
 
-			# Returns the list of constants that would be reloaded upon a call to autoreload.
-			def autoreloadable( *names ) 
+			# Returns the list of constants that would be reloaded upon a call to reload.
+			def reloadable( *names ) 
 				( @reloadable ||= [] ).concat(names)
 				return self
 			end
 			
-			# Reloads all the constants that were loaded via autocode. Technically, all autoreload 
+			# Reloads all the constants that were loaded via autocode. Technically, all reload 
 			# is doing is undefining them (by calling +remove_const+ on each in turn); they won't get 
 			# reloaded until they are referenced.
-			def autoreload
+			def reload
 				@reloadable.each { |name| remove_const( name ) } if @reloadable
 				@reloadable = nil
 				return self
 			end		  
 			
       # Unloads all the constants that were loaded and removes all auto* definitions.
-			def autounload
-				autoreload
+			def unload
+				reload
         @exemplars = @init_blocks = @load_files = nil
 				return self
 			end			

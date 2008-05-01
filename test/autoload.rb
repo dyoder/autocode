@@ -13,7 +13,7 @@ describe "A module where autoload has been called" do
   end
   
   after do
-    Thingy::Mabob.autounload
+    Thingy::Mabob.unload
   end
 
   it "should autoload where files match" do  

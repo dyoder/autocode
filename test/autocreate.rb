@@ -15,7 +15,7 @@ describe "A module where autocreate has been called" do
   end
   
   after do
-    Thingy.autounload
+    Thingy.unload
   end
 
   it "should autocreate some constants" do
@@ -37,7 +37,7 @@ describe "A module where autocreate has been called" do
     end
     
     Duffel::AnyThing.universal.should == true
-    Duffel.autounload
+    Duffel.unload
   end
   
 end
