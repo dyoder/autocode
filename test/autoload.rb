@@ -11,10 +11,14 @@ describe "A module where autoload has been called" do
       end
     end
   end
-  
+
   it "should autoload where files match" do  
     Thingy::Mabob::DooDad.should.respond_to :gizmo
     Thingy::Mabob::Humbug.should.respond_to :full_of_it?
+  end
+  
+  it "should not autoload where it matches a file but is out of scope" do
+    lambda { Thingy::Whatsit::Critter }.should.raise NameError
   end
   
   it "should not autocreate those unmentioned and fileable" do
