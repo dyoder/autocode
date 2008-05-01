@@ -68,7 +68,28 @@ module Autocode
 		    options[:exemplar] = Module.new
 		    autoload key, options
 		  end
-		  
+
+			# Returns the list of constants that would be reloaded upon a call to autoreload.
+			def autoreloadable( *names ) 
+				( @reloadable ||= [] ).concat(names)
+				return self
+			end
+			
+			# Reloads all the constants that were loaded via autocode. Technically, all autoreload 
+			# is doing is undefining them (by calling +remove_const+ on each in turn); they won't get 
+			# reloaded until they are referenced.
+			def autoreload
+				@reloadable.each { |name| remove_const( name ) } if @reloadable
+				@reloadable = nil
+				return self
+			end		  
+			
+      # Unloads all the constants that were loaded and removes all auto* definitions.
+			def autounload
+				autoreload
+        @exemplars = @init_blocks = @load_files = nil
+				return self
+			end			
 		  
 		  define_method :const_missing do | cname | #:nodoc:
         cname = cname.to_sym

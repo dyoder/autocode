@@ -3,9 +3,9 @@ require File.join(File.dirname(__FILE__), 'helpers.rb')
 describe "thingy" do
   before do
     module Thingy
-      extend Autocode; extend Unloadable;
+      extend Autocode
       autocreate(:Whatsit, Module.new) do
-        extend Autocode; extend Unloadable;
+        extend Autocode
         autoload :Critter, :exemplar => Class.new, :directories => File.join(File.dirname(__FILE__), "test_lib")
       end
       
@@ -21,9 +21,9 @@ describe "thingy" do
       end
       
       autocreate :Big, Module.new do
-        extend Autocode; extend Unloadable;
+        extend Autocode
         autocreate :Bad, Module.new do
-          extend Autocode; extend Unloadable;
+          extend Autocode
           autocreate :John, Class.new do
             def self.stinks?; true; end
           end
@@ -38,10 +38,10 @@ describe "thingy" do
   end
   
   after do
-    Thingy::Whatsit.unload    
-    Thingy::Big::Bad.unload
-    Thingy::Big.unload
-    Thingy.unload    
+    Thingy::Whatsit.autounload    
+    Thingy::Big::Bad.autounload
+    Thingy::Big.autounload
+    Thingy.autounload    
   end  
   
   it "fdfdsf" do
