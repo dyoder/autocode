@@ -52,7 +52,7 @@ Rake::RDocTask.new do |rdoc|
 end
 
 Rake::TestTask.new(:test) do |t|
-  t.test_files = FileList["test/*.rb"].exclude("test/helpers.rb", "test_lib/**/*
-")
+  t.test_files = FileList["*.rb"].exclude("helpers.rb", "test_lib/**/*")
+  Dir.chdir 'test'
   t.verbose = true
 end

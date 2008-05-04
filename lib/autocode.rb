@@ -54,11 +54,8 @@ module Autocode
 		      downcase].flatten
         # create a lambda that looks for a file to load
         file_finder = lambda do |cname|
-          filename = ( cname.to_s.gsub(/([a-z\d])([A-Z\d])/){ "#{$1}_#{$2}"} << ".rb" ).downcase
-          dirname = directories.find do |dir|
-  			    File.exist?(File.join(dir.to_s, filename))
-  			  end
-  			  dirname ? File.join(dirname.to_s, filename) : nil
+          filename = ( cname.to_s.gsub(/([a-z\d])([A-Z])/){ "#{$1}_#{$2}"}.tr("-", "_").downcase << ".rb" ).downcase
+          path = directories.map { |dir| File.join(dir.to_s, filename) }.find { |path| File.exist?( path ) }
         end
         # if no exemplar is given, assume Module.new
 			  @load_files ||= Hash.new
