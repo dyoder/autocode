@@ -44,7 +44,7 @@ describe "A module where autoload has been called" do
   end
   
   it "should autoload using default directories" do
-    Waves::Helpers::TheHelperModule.should.respond_to :help
+    Waves::TestLib::TheHelperModule.should.respond_to :help
   end
 
   it "should allow default options" do

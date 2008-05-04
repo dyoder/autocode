@@ -1,5 +1,5 @@
 module Waves
-  module Helpers
+  module TestLib
     module TheHelperModule
       def self.help()
         "help"
