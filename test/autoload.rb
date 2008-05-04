@@ -10,10 +10,24 @@ describe "A module where autoload has been called" do
         autoload_module :Humbug, :directories => [File.join(File.dirname(__FILE__), "test_lib")]
       end
     end
+    module Waves
+      module TestLib
+        extend Autocode
+        autoload true, :exemplar => Module.new
+      end
+    end
+    module Whatever
+      module TestLib
+        extend Autocode
+        autoload
+      end
+    end
   end
   
   after do
     Thingy::Mabob.unload
+    Waves::TestLib.unload
+    Whatever::TestLib.unload
   end
 
   it "should autoload where files match" do  
@@ -27,6 +41,14 @@ describe "A module where autoload has been called" do
   
   it "should not autocreate those unmentioned and fileable" do
     lambda { Thingy::Mabob::MooCow }.should.raise NameError
+  end
+  
+  it "should autoload using default directories" do
+    Waves::Helpers::TheHelperModule.should.respond_to :help
+  end
+
+  it "should allow default options" do
+    Whatever::TestLib::TheOneAndOnly.should.respond_to :help
   end
   
 end

@@ -1,5 +1,3 @@
-require 'reloadable'
-
 module Autocode
 	
 	def self.extended( mod ) #:nodoc:
@@ -41,10 +39,10 @@ module Autocode
   			return self
   		end
 		  
-		  def autoload( key, options )
+		  def autoload(key = true, options = {})
 		    # look for load_files in either a specified directory, or in the directory
 		    # with the snakecase name of the enclosing module
-		    directories = [options[:directories] || default_directory(self.name)].flatten
+		    directories = [options[:directories] || default_directory()].flatten
         # create a lambda that looks for a file to load
         file_finder = lambda do |cname|
           filename = default_file_name(cname)
@@ -55,16 +53,16 @@ module Autocode
         end
         # if no exemplar is given, assume Module.new
 			  @load_files ||= Hash.new
-        @load_files[key] = [file_finder, options[:exemplar]]
+        @load_files[key] = [file_finder, options[:exemplar] || Module.new]
 				return self
 		  end
 		  
-		  def autoload_class(key, superclass=nil, options={})
+		  def autoload_class(key = true, superclass = nil, options = {})
 		    options[:exemplar] = Class.new(superclass)
 		    autoload key, options
 		  end
 		  
-		  def autoload_module(key, options={})
+		  def autoload_module(key = true, options = {})
 		    options[:exemplar] = Module.new
 		    autoload key, options
 		  end
@@ -89,7 +87,9 @@ module Autocode
 				reload
         @exemplars = @init_blocks = @load_files = nil
 				return self
-			end			
+			end
+			
+			private		
 		  
 		  define_method :const_missing do | cname | #:nodoc:
         cname = cname.to_sym
@@ -119,14 +119,17 @@ module Autocode
 				return object
 			end
 			
-			def default_file_name(cname)
-			 ( cname.to_s.gsub(/([a-z\d])([A-Z\d])/){ "#{$1}_#{$2}"} << ".rb" ).downcase
+			def default_file_name(name)
+			  snake_case(name.to_s << ".rb")
 			end
 			
-			def default_directory(module_name)
-			  m = self.name.match( /^.*::([\w\d_]+)$/)
-			  m[1].snake_case
+			def default_directory()
+			  snake_case(self.name.match(/^.*::([\w\d_]+)$/)[1])
 			end
+		  
+		  def snake_case(name)
+		    name.gsub(/([a-z\d])([A-Z])/){"#{$1}_#{$2}"}.tr("-", "_").downcase
+	    end
 		  
 	  end
   end
