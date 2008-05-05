@@ -44,17 +44,13 @@ module Autocode
   		end
 		  
 		  def autoload(key = true, options = {})
+		    snake_case = lambda {|name| name.gsub(/([a-z\d])([A-Z])/){"#{$1}_#{$2}"}.tr("-", "_").downcase }
 		    # look for load_files in either a specified directory, or in the directory
 		    # with the snakecase name of the enclosing module
-		    directories = [options[:directories] || self.name.
-		      # extract the directory from module name
-		      match( /^.*::([\w\d_]+)$/)[1].
-		      # snake_case the module name
-		      gsub(/([a-z\d])([A-Z])/){"#{$1}_#{$2}"}.tr("-", "_").
-		      downcase].flatten
+		    directories = [options[:directories] || snake_case.call(self.name.match( /^.*::([\w\d_]+)$/)[1])].flatten
         # create a lambda that looks for a file to load
         file_finder = lambda do |cname|
-          filename = ( cname.to_s.gsub(/([a-z\d])([A-Z])/){ "#{$1}_#{$2}"}.tr("-", "_").downcase << ".rb" ).downcase
+          filename = snake_case.call(cname.to_s << ".rb")
           path = directories.map { |dir| File.join(dir.to_s, filename) }.find { |path| File.exist?( path ) }
         end
         # if no exemplar is given, assume Module.new
