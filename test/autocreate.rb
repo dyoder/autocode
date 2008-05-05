@@ -40,4 +40,21 @@ describe "A module where autocreate has been called" do
     Duffel.unload
   end
   
+  it "should be possible to include autocode" do
+    module Waves
+      include Autocode
+      autocreate(:TestLib, Module.new) do
+        include Autocode
+        autocreate_class
+        autoload_class
+      end
+    end
+    Waves::TestLib::TheOneAndOnlyClass.help().should == "class help"
+    Waves::TestLib::AnyThing.name.should == "Waves::TestLib::AnyThing"
+    lambda { Waves::TestLib::TheOneAndOnlyModule }.should.raise TypeError
+    Waves::TestLib::ThePretender.name.should == "Waves::TestLib::ThePretender"
+    lambda { Waves::TestLib::ThePretender.help() }.should.raise NoMethodError
+    Waves.unload
+  end
+  
 end
