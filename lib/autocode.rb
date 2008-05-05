@@ -25,6 +25,14 @@ module Autocode
 				return self
 			end
 			
+			def autocreate_class( key = true, superclass = nil )
+			  autocreate key, Class.new( superclass )
+			end
+			
+			def autocreate_module( key = true )
+			  autocreate key, Module.new
+			end
+			
 			def autoinit( key, &block )
   		  # See whether we're dealing with a namespaced constant,
   		  # The match groupings for,  e.g. "X::Y::Z", would be
