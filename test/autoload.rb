@@ -6,28 +6,14 @@ describe "A module where autoload has been called" do
     module Thingy
       module Mabob
         extend Autocode
-        autoload_class true, Class, :directories => [File.join(File.dirname(__FILE__), "test_lib")]
+        autoload_class :DooDad, Class, :directories => [File.join(File.dirname(__FILE__), "test_lib")]
         autoload_module :Humbug, :directories => [File.join(File.dirname(__FILE__), "test_lib")]
-      end
-    end
-    module Waves
-      module TestLib
-        extend Autocode
-        autoload true, :exemplar => Module.new
-      end
-    end
-    module Whatever
-      module TestLib
-        extend Autocode
-        autoload
       end
     end
   end
   
   after do
     Thingy::Mabob.unload
-    Waves::TestLib.unload
-    Whatever::TestLib.unload
   end
 
   it "should autoload where files match" do  
@@ -36,6 +22,7 @@ describe "A module where autoload has been called" do
   end
   
   it "should not autoload where it matches a file but is out of scope" do
+    lambda { Thingy::Mabob::Answer42ItIs }.should.raise NameError
     lambda { Thingy::Whatsit::Critter }.should.raise NameError
   end
   
@@ -43,12 +30,57 @@ describe "A module where autoload has been called" do
     lambda { Thingy::Mabob::MooCow }.should.raise NameError
   end
   
-  it "should autoload using default directories" do
-    Waves::TestLib::TheHelperModule.should.respond_to :help
+  it "should autoload using super class" do
+    module Waves
+      module TestLib
+        extend Autocode
+        autoload_class true, Thingy::Mabob::DooDad
+      end
+    end
+    Waves::TestLib::TheClass42Gang.party?.should == true
+    Waves::TestLib::TheClass42Gang.gizmo.should == 1
+    Waves::TestLib.unload
   end
 
-  it "should allow default options" do
-    Whatever::TestLib::TheOneAndOnly.should.respond_to :help
+  it "should autoload using defaults" do
+    module Waves
+      module TestLib
+        extend Autocode
+        autoload
+      end
+    end    
+    Waves::TestLib::TheOneAndOnlyModule.help().should == "module help"
+    lambda { Waves::TestLib::TheOneAndOnlyClass }.should.raise TypeError
+    Waves::TestLib::ThePretender.name.should == "Waves::TestLib::ThePretender"
+    lambda { Waves::TestLib::ThePretender.help() }.should.raise NoMethodError
+    Waves::TestLib.unload
   end
   
+  it "should autoload class using defaults" do
+    module Waves
+      module TestLib
+        extend Autocode
+        autoload_class
+      end
+    end
+    Waves::TestLib::TheOneAndOnlyClass.help().should == "class help"
+    lambda { Waves::TestLib::TheOneAndOnlyModule }.should.raise TypeError
+    Waves::TestLib::ThePretender.name.should == "Waves::TestLib::ThePretender"
+    lambda { Waves::TestLib::ThePretender.help() }.should.raise NoMethodError
+    Waves::TestLib.unload
+  end
+
+  it "should autoload module using defaults" do
+    module Waves
+      module TestLib
+        extend Autocode
+        autoload_module
+      end
+    end
+    Waves::TestLib::TheOneAndOnlyModule.help().should == "module help"
+    lambda { Waves::TestLib::TheOneAndOnlyClass }.should.raise TypeError
+    Waves::TestLib::ThePretender.name.should == "Waves::TestLib::ThePretender"
+    lambda { Waves::TestLib::ThePretender.help() }.should.raise NoMethodError
+    Waves::TestLib.unload
+  end
 end

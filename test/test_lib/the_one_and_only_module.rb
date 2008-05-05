@@ -1,8 +1,8 @@
-module Whatever
+module Waves
   module TestLib
-    module TheOneAndOnly
+    module TheOneAndOnlyModule
       def self.help()
-        "help"
+        "module help"
       end
     end
   end

@@ -12,11 +12,11 @@ describe "thingy" do
       autoinit(:Whatsit) do
         def self.in_scope; true; end
       end
-          
+      
       autoinit('Whatsit::Critter') do
         def self.outside_scope; true; end
         def instance; true; end
-        # this definition overrides the one in the file
+        # this definition is overridden by the one in the file
         def self.gizmo; 2; end
       end
       
@@ -54,6 +54,5 @@ describe "thingy" do
   it "should run autoinit blocks before the file loading" do
      Thingy::Whatsit::Critter.gizmo.should == 1
   end
-  
-  
+
 end
