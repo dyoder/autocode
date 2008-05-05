@@ -1,13 +1,13 @@
 Gem::Specification.new do |s|
   s.name = %q{autocode}
-  s.version = "0.9.4"
+  s.version = "0.9.5"
 
   s.specification_version = 2 if s.respond_to? :specification_version=
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dan Yoder"]
   s.date = %q{2008-04-30}
-  s.files = ["lib/autocode.rb", "lib/reloadable.rb", "test/autocreate.rb", "test/autoinit.rb", "test/autoload.rb", "test/helpers.rb", "test/test_lib", "test/test_lib/critter.rb", "test/test_lib/doo_dad.rb"]
+  s.files = ["lib/autocode.rb", "test/autocreate.rb", "test/autoinit.rb", "test/autoload.rb", "test/helpers.rb", "test/test_lib", "test/test_lib/critter.rb", "test/test_lib/doo_dad.rb"]
   s.has_rdoc = true
   s.homepage = %q{http://dev.zeraweb.com/}
   s.require_paths = ["lib"]
