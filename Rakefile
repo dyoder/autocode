@@ -13,7 +13,7 @@ spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.required_ruby_version = '>= 1.8.6'
   s.name = "autocode"
-  s.version = "0.9.3"
+  s.version = "0.9.7"
   s.authors = ["Dan Yoder"]
   s.homepage = 'http://dev.zeraweb.com/'
   s.add_dependency 'metaid'
