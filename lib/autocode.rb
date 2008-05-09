@@ -25,12 +25,12 @@ module Autocode
         return self
       end
 
-      def autocreate_class( key = true, superclass = Class )
-        autocreate key, Class.new( superclass )
+      def autocreate_class( key = true, superclass = Class, &block )
+        autocreate( key, Class.new( superclass ), &block )
       end
 
-      def autocreate_module( key = true )
-        autocreate key, Module.new
+      def autocreate_module( key = true, &block )
+        autocreate( key, Module.new, &block )
       end
 
       def autoinit( key, &block )
