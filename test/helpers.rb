@@ -1,4 +1,5 @@
-%w{ rubygems bacon metaid }.each { |dep| require dep }
+require 'rubygems'
+%w{ bacon metaid }.each { |dep| require dep }
 Bacon.extend Bacon::TestUnitOutput
 Bacon.summary_on_exit
 
