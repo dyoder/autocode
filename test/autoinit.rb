@@ -44,7 +44,7 @@ describe "thingy" do
     Thingy.unload    
   end  
   
-  it "fdfdsf" do
+  it "should work with namespaced constants" do
     Thingy::Whatsit.in_scope.should.be.true
     Thingy::Whatsit::Critter.outside_scope.should.be.true
     Thingy::Whatsit::Critter.new.instance.should.be.true
