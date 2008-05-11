@@ -108,7 +108,7 @@ module Autocode
         load_file_finder, load_class = @load_files[cname] || @load_files[true]
 
         if load_file_finder && filename = load_file_finder.call(cname)
-          object = load_class.clone
+          object = exemplar ? exemplar.clone : load_class.clone
         elsif exemplar
           object = exemplar.clone
         else
