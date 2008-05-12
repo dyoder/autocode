@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), 'helpers.rb')
 describe "auto_create should" do
 
   before do
-    A.reload if defined? A and A.respond_to? :reload
+    A.unload if defined? A and A.respond_to? :unload
     module A
       include AutoCode
       auto_create_module :B do

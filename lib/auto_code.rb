@@ -76,7 +76,7 @@ module AutoCode
       # Reloads all the constants that were loaded via auto_code. Technically, all reload
       # is doing is undefining them (by calling +remove_const+ on each in turn); they won't get
       # reloaded until they are referenced.
-      def reload ; @reloadable.each { |name| remove_const( name ) } ; @reloadable = nil ; self; end
+      def reload ; @reloadable.each { |name| remove_const( name ) } ; @reloadable = [] ; self; end
 
       # Unloads all the constants that were loaded and removes all auto* definitions.
       def unload ; reload ; @initializers = nil ; self ; end

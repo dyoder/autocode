@@ -5,7 +5,7 @@ require 'extensions/io'
 describe "auto_load should" do
 
   before do
-    A.reload if defined? A and A.respond_to? :reload
+    A.unload if defined? A and A.respond_to? :unload
     FileUtils.mkdir('tmp')
     @path = File.join( 'tmp', 'b.rb' )
     content =<<-EOF
