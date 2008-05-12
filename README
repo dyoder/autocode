@@ -1,12 +1,12 @@
-= Introducing Autocode 
+= Introducing AutoCode 
 
-Autocode makes it relatively easy to automatically (re)load or even generate classes and modules on the fly. You can use it like this:
+AutoCode makes it relatively easy to automatically (re)load or even generate classes and modules on the fly. You can use it like this:
 
-  require 'autocode'
+  require 'auto_code'
   
   module Application
     extend Autoload
-    autoload true
+    auto_load true
     directories :configurations, :models, :views, :controllers
   end
   
@@ -16,21 +16,21 @@ This will attempt to load code dynamically from the given directories, using the
 
 To make code reloadable (very useful when debugging running processes), simply extend Reloadable. Thus, our above example would become:
 
-  require 'autocode'
+  require 'auto_code'
 
   module Application
     extend Autoload; extend Reloadable
-    autoload true
+    auto_load true
     directories :configurations, :models, :views, :controllers
   end
   
-Then, later on, we can simply call <tt>Application.reload</tt> to reload all the code that was loaded via *Autocode*. *Important*: Only code loaded via *Autocode* (Autoload or Autocreate) will be reloaded.
+Then, later on, we can simply call <tt>Application.reload</tt> to reload all the code that was loaded via *AutoCode*. *Important*: Only code loaded via *AutoCode* (Autoload or Autocreate) will be reloaded.
 
 == Autocreation
 
-Sometimes it's useful to generate defaults for classes or modules that don't exist. This can be particularly powerful when used in combination with autoloading.
+Sometimes it's useful to generate defaults for classes or modules that don't exist. This can be particularly powerful when used in combination with auto_loading.
 
-  require 'autocode'
+  require 'auto_code'
 
   module Application
     extend Autocreate; extend Reloadable
@@ -38,23 +38,23 @@ Sometimes it's useful to generate defaults for classes or modules that don't exi
       [ :Models, :models ],
       [ :Views, :views ],
       [ :Controllers, :controllers ] ].each |mod_name, dir_name| do
-      autocreate mod_name, Module.new do 
+      auto_create mod_name, Module.new do 
         extend Autoload
-        autoload true
+        auto_load true
         directories dir_name
       end
     end
   end
 
-This will autocreate the modules Configurations, Models, Views, and Controllers within the Application module, as they are referenced, based on the exemplar Module configured to autoload code from the configurations, models, views, and controllers directories.
+This will auto_create the modules Configurations, Models, Views, and Controllers within the Application module, as they are referenced, based on the exemplar Module configured to auto_load code from the configurations, models, views, and controllers directories.
 
 For example, referencing <tt>Application::Models::Customer</tt> will cause the file <tt>models/customer.rb</tt> to be loaded.
 
 == Autodefinition
 
-If you do configuration or method definition for a reloadable class or module, unless your code is in an autoloading file, it will get clobbered upon reload.  You can work around this with autodef, which registers blocks against constant names so that autocreate and autoload can run them after object creation.
+If you do configuration or method definition for a reloadable class or module, unless your code is in an auto_loading file, it will get clobbered upon reload.  You can work around this with autodef, which registers blocks against constant names so that auto_create and auto_load can run them after object creation.
 
-require 'autocode'
+require 'auto_code'
 
 module Application
   extend Autodef
@@ -71,11 +71,11 @@ end
 
 == Other Uses
 
-Autoloading and autocreation, along with reloading, can be used to provide sophisticated rules for loading and even generating modules and classes within a given module. These capabilities are increasingly found within frameworks like Rails and Camping, but *Autocode* makes it possible to mixin these capabilities into any situation and precisely control how they are applied.
+Autoloading and autocreation, along with reloading, can be used to provide sophisticated rules for loading and even generating modules and classes within a given module. These capabilities are increasingly found within frameworks like Rails and Camping, but *AutoCode* makes it possible to mixin these capabilities into any situation and precisely control how they are applied.
 
 == Support
 
-If you have questions or comments, please go to the *Autocode* Web site first at http://code.google.com/p/ruby-autocode/.
+If you have questions or comments, please go to the *AutoCode* Web site first at http://code.google.com/p/ruby-auto_code/.
 
 (c) 2007 Dan Yoder
 
