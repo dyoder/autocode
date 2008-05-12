@@ -6,11 +6,11 @@ describe "auto_eval should" do
     A.reload if defined? A and A.respond_to? :reload
     module A
       include AutoCode
-      auto_create_module :B 
-      auto_eval :B do
-        include AutoCode
-        auto_create_class
-      end
+      auto_create_module :B
+    end
+    A.auto_eval :B do
+      include AutoCode
+      auto_create_class
     end
   end
   

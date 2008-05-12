@@ -2,29 +2,20 @@
 
 AutoCode makes it relatively easy to automatically (re)load or even generate classes and modules on the fly. You can use it like this:
 
-  require 'auto_code'
+  require 'autocode'
   
   module Application
-    extend Autoload
-    auto_load true
-    directories :configurations, :models, :views, :controllers
+    include AutoCode
+    auto_load true, :directories => [ :configurations, :models, :views, :controllers ]
   end
   
 This will attempt to load code dynamically from the given directories, using the module name to determine which directory to look in. Thus, <tt>Application::CustomerModel</tt> could load the file <tt>models/customer_model.rb</tt>.
 
 == Reloading Code
 
-To make code reloadable (very useful when debugging running processes), simply extend Reloadable. Thus, our above example would become:
-
-  require 'auto_code'
-
-  module Application
-    extend Autoload; extend Reloadable
-    auto_load true
-    directories :configurations, :models, :views, :controllers
-  end
+Auto-loaded or created code is automatically reloadable (very useful when debugging running processes). Just call reload on any given module.
   
-Then, later on, we can simply call <tt>Application.reload</tt> to reload all the code that was loaded via *AutoCode*. *Important*: Only code loaded via *AutoCode* (Autoload or Autocreate) will be reloaded.
+ *Important*: Only code loaded via *AutoCode* (auto_load or auto_create) will be reloaded.
 
 == Autocreation
 
@@ -33,40 +24,31 @@ Sometimes it's useful to generate defaults for classes or modules that don't exi
   require 'auto_code'
 
   module Application
-    extend Autocreate; extend Reloadable
-    [ [ :Configurations, :configurations ], 
-      [ :Models, :models ],
-      [ :Views, :views ],
-      [ :Controllers, :controllers ] ].each |mod_name, dir_name| do
-      auto_create mod_name, Module.new do 
-        extend Autoload
-        auto_load true
-        directories dir_name
+    include AutoCode
+    
+    %w( Models Views Controllers ).each |name| do
+      auto_create_module name do 
+        include AutoCode
+        auto_load true, :directories => [ name.downcase ]
       end
     end
   end
 
-This will auto_create the modules Configurations, Models, Views, and Controllers within the Application module, as they are referenced, based on the exemplar Module configured to auto_load code from the configurations, models, views, and controllers directories.
+This will auto_create the modules Configurations, Models, Views, and Controllers within the Application module, as they are referenced, and then initialize them so that they will automatically load source files from the corresponding directories.
 
 For example, referencing <tt>Application::Models::Customer</tt> will cause the file <tt>models/customer.rb</tt> to be loaded.
 
-== Autodefinition
+== Initializing 
 
-If you do configuration or method definition for a reloadable class or module, unless your code is in an auto_loading file, it will get clobbered upon reload.  You can work around this with autodef, which registers blocks against constant names so that auto_create and auto_load can run them after object creation.
+Sometimes you want to reopen a class or module and add or change methods, etc. However, in the case of auto-loading or creating unless your code is in an auto_load or auto_create block, it will get clobbered upon reload. You address this using auto_eval which registers blocks against constant names so that auto_create and auto_load can run them after object creation.
 
 require 'auto_code'
 
 module Application
-  extend Autodef
-  autodef(:Configurations) do
-    def self.upcase_name; name.upcase ; end
+  include AutoCode
+  Models.auto_eval(true) do
+    set_model self.name
   end
-
-  autodef('Models::Doodad') do
-    def self.create_broken; new(:working => false); end
-    def part_number; 12345 ; end
-  end
-  
 end
 
 == Other Uses
