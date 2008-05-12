@@ -6,7 +6,8 @@ describe "auto_load should" do
 
   before do
     A.reload if defined? A and A.respond_to? :reload
-    @path = File.join( 'auto_load', 'b.rb' ) 
+    FileUtils.mkdir('tmp')
+    @path = File.join( 'tmp', 'b.rb' )
     content =<<-EOF
 module A
   module B
@@ -17,7 +18,7 @@ EOF
     module A
       include AutoCode
       auto_create_class :B
-      auto_load :B, :directories => [ 'auto_load' ]
+      auto_load :B, :directories => ['tmp']
       auto_create_class :B
     end
     
@@ -25,6 +26,7 @@ EOF
   
   after do
     FileUtils.rm( File.join( @path ) )
+    FileUtils.rmdir( 'tmp' )
   end
   
   specify "allow you to load a file to define a const" do
