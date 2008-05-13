@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.name = %q{auto_code}
+  s.name = %q{autocode}
   s.version = "0.9.8"
 
   s.specification_version = 2 if s.respond_to? :specification_version=

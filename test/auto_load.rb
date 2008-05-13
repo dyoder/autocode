@@ -9,11 +9,11 @@ describe "auto_load should" do
     FileUtils.mkdir('tmp')
     @path = File.join( 'tmp', 'b.rb' )
     content =<<-EOF
-module A
-  module B
-  end
-end
-EOF
+      module A
+        module B
+        end
+      end
+    EOF
     File.write( @path, content )
     module A
       include AutoCode
