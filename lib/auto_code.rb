@@ -79,7 +79,7 @@ module AutoCode
       def reload ; @reloadable.each { |name| remove_const( name ) } ; @reloadable = [] ; self; end
 
       # Unloads all the constants that were loaded and removes all auto* definitions.
-      def unload ; reload ; @initializers = nil ; self ; end
+      def unload ; reload ; @initializers = Hash.new { |h,k| h[k] = [] } ; self ; end
 
       private
 
