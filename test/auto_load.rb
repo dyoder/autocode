@@ -40,5 +40,13 @@ EOF
   specify "always take precedence over auto_create" do
     A::B.class.should == Module
   end
+  
+  specify "snake case the constant name which is used to map a constant to a filename" do
+    AutoCode::Loader.snake_case(:Post).should == "post"
+    AutoCode::Loader.snake_case(:GitHub).should == "git_hub"
+    AutoCode::Loader.snake_case(:GITRepository).should == "git_repository"
+    AutoCode::Loader.snake_case(:Git42Repository).should == "git42_repository"
+    AutoCode::Loader.snake_case(:GIT42Repository).should == "git42_repository"
+  end
 
 end

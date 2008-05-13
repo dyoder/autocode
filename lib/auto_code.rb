@@ -9,16 +9,16 @@ module AutoCode
   class Loader
     def initialize(options={}); @directories = options[:directories] ; end
     def call(cname)
+      filename = Loader.snake_case( cname ) << '.rb'
       if @directories.nil?
-        Kernel.load( Loader.snake_case( cname.to_s ) << '.rb' )
+        Kernel.load( filename )
       else
-        filename = Loader.snake_case( cname.to_s ) << '.rb'
         path = @directories.map { |dir| File.join( dir.to_s, filename ) }.find { |path| File.exist?( path ) }
         Kernel.load( path ) rescue nil unless path.nil?
       end
     end
     def Loader.snake_case(cname)
-      cname.gsub(/([a-z\d])([A-Z])/){"#{$1}_#{$2}"}.tr("-", "_").downcase
+      cname.to_s.gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').gsub(/([a-z\d])([A-Z])/,'\1_\2').downcase
     end
   end
   
