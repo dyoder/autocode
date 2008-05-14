@@ -12,10 +12,19 @@ describe "auto_eval should" do
       include AutoCode
       auto_create_class
     end
+    A.auto_eval :B do
+      auto_eval :R do
+        def self.foo; end
+      end
+    end
   end
   
   specify "allow you to run blocks after an object is first created" do
     A::B::C.class.should == Class
+  end
+  
+  specify "work inside an auto_* block" do
+    A::B::R.class.should == Class
   end
 
 end
