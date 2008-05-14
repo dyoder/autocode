@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dan Yoder"]
-  s.date = %q{2008-05-09}
-  s.files = ["lib/auto_code.rb", "test/auto_create.rb", "test/autoinit.rb", "test/auto_load.rb", "test/helpers.rb", "test/test_lib", "test/test_lib/answer42_it_is.rb", "test/test_lib/critter.rb", "test/test_lib/doo_dad.rb", "test/test_lib/humbug.rb", "test/test_lib/the_class42_gang.rb", "test/test_lib/the_one_and_only_class.rb", "test/test_lib/the_one_and_only_module.rb", "test/test_lib/the_pretender.rb"]
+  s.date = %q{2008-05-14}
+  s.files = ["lib/autocode.rb", "test/auto_code.gemspec", "test/auto_create.rb", "test/auto_eval.rb", "test/auto_load.rb", "test/autocode.gemspec", "test/helpers.rb"]
   s.has_rdoc = true
   s.homepage = %q{http://dev.zeraweb.com/}
   s.require_paths = ["lib"]
