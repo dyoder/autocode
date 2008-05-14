@@ -41,7 +41,7 @@ module AutoCode
     mod.instance_eval do
 
       # Initialize bookkeeping variables needed by AutoCode
-      @initializers = Hash.new { |h,k| h[k] = [] }; @reloadable = []
+      @initializers ||= Hash.new { |h,k| h[k] = [] }; @reloadable ||= []
       
       # Adds an auto_create block for the given key using the given exemplar if provided
       def auto_create( key = true, options = {}, &block )
