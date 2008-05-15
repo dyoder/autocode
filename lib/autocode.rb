@@ -29,8 +29,7 @@ module AutoCode
       # Adds an auto_create block for the given key using the given exemplar if provided
       def auto_create( key = true, options = {}, &block )
         @autocode[:constructors][ AutoCode.normalize( key ) ] << lambda do | cname |
-          return if const_defined?( cname )
-          exemplar = (options[:exemplar]||Module.new).clone
+          exemplar = ( options[:exemplar] || Module.new ).clone
           exemplar.module_eval( &block ) if block
           const_set( cname, exemplar )
         end
@@ -39,7 +38,6 @@ module AutoCode
       # Adds an auto_load block for the given key and directories
       def auto_load( key = true, options = {} )
         @autocode[:constructors][ AutoCode.normalize( key ) ] << lambda do | cname |
-          return  if const_defined?( cname )
           filename = AutoCode.snake_case( cname ) << '.rb'
           if options[:directories].nil?
             Kernel.load( filename )
@@ -55,7 +53,6 @@ module AutoCode
       # Adds an arbitrary initializer block for the given key
       def auto_eval( key, &block )
         @autocode[:initializers][ AutoCode.normalize( key ) ] << lambda do | cname |
-          return unless const_defined?( cname )
           const_get( cname ).module_eval( &block )
         end
       end
@@ -81,9 +78,11 @@ module AutoCode
       old = method( :const_missing )
       (class << self ; self ; end ).instance_eval do
         define_method( :const_missing ) do | cname |
-          x = @autocode[:constructors] ; y = @autocode[:initializers]
-          ( y[true] + y[cname] + x[true] + x[cname] ).reverse_each { |f| f.call( cname ) }
-          return old.call(cname) unless const_defined?( cname )
+          constructors = @autocode[:constructors][true] + @autocode[:constructors][cname]
+          constructors.pop.call( cname ) until ( const_defined?( cname ) or constructors.empty? )
+          return old.call( cname ) unless const_defined?( cname )
+          initializers = @autocode[:initializers][true] + @autocode[:initializers][cname]
+          initializers.pop.call( cname ) until initializers.empty?
           @autocode[:loaded] << cname ; const_get( cname )
         end
       end
