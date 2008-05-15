@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), 'helpers.rb')
 describe "auto_create should" do
 
   before do
-    A.unload if defined? A and A.respond_to? :unload
+    Object.instance_eval { remove_const(:A) if const_defined?(:A) }
     module A
       include AutoCode
       auto_create_module :B do
