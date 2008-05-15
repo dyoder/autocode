@@ -52,8 +52,8 @@ module AutoCode
 
       # Adds an arbitrary initializer block for the given key
       def auto_eval( key, &block )
-        @autocode[:initializers][ AutoCode.normalize( key ) ] << lambda do | cname |
-          const_get( cname ).module_eval( &block )
+        @autocode[:initializers][ AutoCode.normalize( key ) ] << lambda do | mod |
+          mod.module_eval( &block )
         end
       end
 
@@ -82,7 +82,7 @@ module AutoCode
           constructors.pop.call( cname ) until ( const_defined?( cname ) or constructors.empty? )
           return old.call( cname ) unless const_defined?( cname )
           initializers = @autocode[:initializers][true] + @autocode[:initializers][cname]
-          initializers.pop.call( cname ) until initializers.empty?
+          initializers.pop.call( const_get( cname ) ) until initializers.empty?
           @autocode[:loaded] << cname ; const_get( cname )
         end
       end
