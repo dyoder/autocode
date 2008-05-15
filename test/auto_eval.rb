@@ -13,6 +13,7 @@ describe "auto_eval should" do
       auto_create_class
     end
     A.auto_eval :B do
+      include AutoCode
       auto_eval :C do
         self::D = true
       end

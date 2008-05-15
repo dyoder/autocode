@@ -17,8 +17,8 @@ describe "auto_load should" do
     File.write( @path, content )
     module A
       include AutoCode
-      auto_load :B, :directories => ['tmp']
       auto_create_class :B
+      auto_load :B, :directories => ['tmp']
     end
     
   end

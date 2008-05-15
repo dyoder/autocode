@@ -82,7 +82,7 @@ module AutoCode
       (class << self ; self ; end ).instance_eval do
         define_method( :const_missing ) do | cname |
           x = @autocode[:constructors] ; y = @autocode[:initializers]
-          ( x[cname] + x[true] + y[cname] + y[true] ).each { |f| f.call( cname ) }
+          ( y[true] + y[cname] + x[true] + x[cname] ).reverse_each { |f| f.call( cname ) }
           return old.call(cname) unless const_defined?( cname )
           @autocode[:loaded] << cname ; const_get( cname )
         end
