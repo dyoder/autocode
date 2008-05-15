@@ -32,6 +32,10 @@ describe "auto_load should" do
     A::B.class.should == Module
   end
   
+  specify "should implement LIFO semantics" do
+    A::B.class.should == Module
+  end
+
   specify "should raise a NameError if a const doesn't match" do
     lambda{ A::C }.should.raise NameError
   end
