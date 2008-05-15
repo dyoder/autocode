@@ -45,7 +45,7 @@ module AutoCode
             path = options[:directories].
               map { |dir| File.join( dir.to_s, filename ) }.
               find { |path| File.exist?( path ) }
-            Kernel.load( path ) rescue nil unless path.nil?
+            Kernel.load( path ) unless path.nil?
           end
         end
       end
