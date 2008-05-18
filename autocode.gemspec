@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dan Yoder"]
-  s.date = %q{2008-05-14}
+  s.date = %q{2008-05-15}
   s.files = ["lib/autocode.rb", "test/auto_code.gemspec", "test/auto_create.rb", "test/auto_eval.rb", "test/auto_load.rb", "test/autocode.gemspec", "test/helpers.rb"]
   s.has_rdoc = true
   s.homepage = %q{http://dev.zeraweb.com/}
