@@ -13,8 +13,10 @@ spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.required_ruby_version = '>= 1.8.6'
   s.name = "autocode"
+  s.rubyforge_project = 'autocode'
   s.version = "0.9.9"
   s.authors = ["Dan Yoder"]
+  s.email = 'dan@zeraweb.com'
   s.homepage = 'http://dev.zeraweb.com/'
   s.add_dependency 'metaid'
   s.summary  = "Utility for auto-including, reloading, and generating classes and modules."
@@ -55,4 +57,5 @@ Rake::TestTask.new(:test) do |t|
   t.test_files = FileList["*.rb"].exclude("helpers.rb", "test_lib/**/*")
   Dir.chdir 'test'
   t.verbose = true
+  Dir.chdir '..'
 end
