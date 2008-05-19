@@ -1,0 +1,6 @@
+0.9.9 
+- Added auto_eval
+- Fixed loading bug for "multi-word" constants
+- Changed interface for setting directories
+- Renamed interface methods to auto_load and auto_create
+- Added convencience methods

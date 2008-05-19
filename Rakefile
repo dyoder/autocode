@@ -47,10 +47,15 @@ task :gemspec do
   end
 end
 
+desc 'Publish rdoc to RubyForge.'
+task :publish do
+  `rsync -avz --delete doc/rdoc/ dyoder67@rubyforge.org:/var/www/gforge-projects/autocode/`
+end
+
 Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'doc/rdoc'
   rdoc.options << '--line-numbers'
-  rdoc.rdoc_files.add([ 'README', 'lib/*.rb' ])
+  rdoc.rdoc_files.add([ 'README', 'HISTORY', 'lib/*.rb' ])
 end
 
 Rake::TestTask.new(:test) do |t|

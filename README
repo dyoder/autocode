@@ -1,6 +1,6 @@
 = Introducing AutoCode 
 
-AutoCode makes it relatively easy to automatically (re)load or even generate classes and modules on the fly. You can use it like this:
+AutoCode is a class (and module) loader from Ruby, complete with initialization hooks and reloading. It works as a mixin and uses #const_remove for unloading so there can never be any artifacts from prior loads hanging around.
 
   require 'autocode'
   
@@ -57,7 +57,7 @@ Autoloading and autocreation, along with reloading, can be used to provide sophi
 
 == Support
 
-If you have questions or comments, please go to the *AutoCode* Web site first at http://code.google.com/p/ruby-auto_code/.
+If you have questions or comments, please go to the Waves support forum (which also supports AutoCode, since AutoCode is principally used within Waves) at http://groups.google.com/group/rubywaves.
 
 (c) 2007 Dan Yoder
 
