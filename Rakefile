@@ -49,7 +49,8 @@ end
 
 desc 'Publish rdoc to RubyForge.'
 task :publish do
-  `rsync -avz --delete doc/rdoc/ dyoder67@rubyforge.org:/var/www/gforge-projects/autocode/`
+  # `rsync -avz --delete doc/rdoc/ dyoder67@rubyforge.org:/var/www/gforge-projects/autocode/`
+  `scp -r doc/rdoc dyoder67@rubyforge.org:/var/www/gforge-projects/autocode/`
 end
 
 Rake::RDocTask.new do |rdoc|

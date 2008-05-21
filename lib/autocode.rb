@@ -82,7 +82,7 @@ module AutoCode
           constructors.pop.call( cname ) until ( const_defined?( cname ) or constructors.empty? )
           return old.call( cname ) unless const_defined?( cname )
           initializers = @autocode[:initializers][true] + @autocode[:initializers][cname]
-          mod = const_get( cname ) ; initializers.pop.call( mod ) until initializers.empty?
+          mod = const_get( cname ) ; initializers.shift.call( mod ) until initializers.empty?
           @autocode[:loaded] << cname ; const_get( cname )
         end
       end
