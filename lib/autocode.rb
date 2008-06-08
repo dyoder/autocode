@@ -1,9 +1,8 @@
 module AutoCode
   
   # always make sure we have a camel-cased symbol
-  def AutoCode.normalize( cname )  
-    return cname unless cname.is_a? String
-    cname.gsub(/(_)(\w)/) { $2.upcase }.gsub(/^([a-z])/) { $1.upcase }.intern
+  def AutoCode.camel_case( cname )  
+    cname.to_s.gsub(/(_)(\w)/) { $2.upcase }.gsub(/^([a-z])/) { $1.upcase }.intern
   end
   
   def AutoCode.snake_case( cname )
@@ -28,7 +27,7 @@ module AutoCode
       
       # Adds an auto_create block for the given key using the given exemplar if provided
       def auto_create( key = true, options = {}, &block )
-        @autocode[:constructors][ AutoCode.normalize( key ) ] << lambda do | cname |
+        @autocode[:constructors][ AutoCode.camel_case( key ) ] << lambda do | cname |
           exemplar = ( options[:exemplar] || Module.new ).clone
           exemplar.module_eval( &block ) if block
           const_set( cname, exemplar )
@@ -37,7 +36,7 @@ module AutoCode
 
       # Adds an auto_load block for the given key and directories
       def auto_load( key = true, options = {} )
-        @autocode[:constructors][ AutoCode.normalize( key ) ] << lambda do | cname |
+        @autocode[:constructors][ AutoCode.camel_case( key ) ] << lambda do | cname |
           filename = AutoCode.snake_case( cname ) << '.rb'
           if options[:directories].nil?
             Kernel.load( filename ) if File.exist?( filename )
@@ -52,7 +51,7 @@ module AutoCode
 
       # Adds an arbitrary initializer block for the given key
       def auto_eval( key, &block )
-        @autocode[:initializers][ AutoCode.normalize( key ) ] << lambda do | mod |
+        @autocode[:initializers][ AutoCode.camel_case( key ) ] << lambda do | mod |
           mod.module_eval( &block )
         end
       end
