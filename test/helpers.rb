@@ -12,4 +12,4 @@ Bacon::Context.instance_eval do
   alias_method :specify, :it
 end
 
-require '../lib/autocode'
+require 'lib/autocode'
