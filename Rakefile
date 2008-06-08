@@ -14,7 +14,7 @@ spec = Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.8.6'
   s.name = "autocode"
   s.rubyforge_project = 'autocode'
-  s.version = "0.9.9"
+  s.version = "1.0.0"
   s.authors = ["Dan Yoder"]
   s.email = 'dan@zeraweb.com'
   s.homepage = 'http://dev.zeraweb.com/'
