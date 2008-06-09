@@ -1,5 +1,5 @@
 require 'rubygems'
-%w{ bacon metaid }.each { |dep| require dep }
+%w{ bacon }.each { |dep| require dep }
 # Bacon.extend Bacon::TestUnitOutput
 Bacon.summary_on_exit
 
@@ -12,4 +12,4 @@ Bacon::Context.instance_eval do
   alias_method :specify, :it
 end
 
-require 'lib/autocode'
+require "#{File.dirname(__FILE__)}/../lib/autocode"

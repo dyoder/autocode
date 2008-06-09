@@ -40,25 +40,27 @@ For example, referencing <tt>Application::Models::Customer</tt> will cause the f
 
 == Initializing 
 
-Sometimes you want to reopen a class or module and add or change methods, etc. However, in the case of auto-loading or creating unless your code is in an auto_load or auto_create block, it will get clobbered upon reload. You address this using auto_eval which registers blocks against constant names so that auto_create and auto_load can run them after object creation.
+Sometimes you want to reopen a class or module and add or change methods, etc. However, in the case of auto-loading or creating unless your code is in an auto_loaded file or an auto_create block, it will get clobbered upon reload. You avoid the clobber using auto_eval, which registers blocks against constant names so that auto_create and auto_load can run them after object creation.
 
 require 'auto_code'
 
 module Application
   include AutoCode
-  Models.auto_eval(true) do
-    set_model self.name
+  auto_eval :views do
+    auto_eval :error do
+      def not_found; "404 Not Found"; end
+    end
   end
 end
 
 == Other Uses
 
-Autoloading and autocreation, along with reloading, can be used to provide sophisticated rules for loading and even generating modules and classes within a given module. These capabilities are increasingly found within frameworks like Rails and Camping, but *AutoCode* makes it possible to mixin these capabilities into any situation and precisely control how they are applied.
+Autoloading and autocreation, along with reloading, can be used to provide sophisticated rules for loading, generating, and configuring modules and classes within a given module. These capabilities are increasingly found within frameworks like Rails and Camping, but *AutoCode* makes it possible to mixin these capabilities into any situation and precisely control how they are applied.
 
 == Support
 
-If you have questions or comments, please go to the Waves support forum (which also supports AutoCode, since AutoCode is principally used within Waves) at http://groups.google.com/group/rubywaves.
+Direct questions or comments to the Waves support forum (which also supports AutoCode, as it is principally used within Waves) at http://groups.google.com/group/rubywaves.  You can submit bugs to the Waves issue tracker at http://waves.lighthouseapp.com.
 
-(c) 2007 Dan Yoder
+(c) 2008 Dan Yoder
 
 Licensed under the MIT License.

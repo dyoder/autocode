@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'helpers.rb')
 
-describe "auto_eval should" do
+describe "auto_eval" do
 
   before do
     Object.instance_eval { remove_const(:A) if const_defined?(:A) }
@@ -20,11 +20,11 @@ describe "auto_eval should" do
     end
   end
   
-  specify "allow you to run blocks after an object is first created" do
+  specify "allows you to run blocks after an object is first created" do
     A::B::C.class.should == Class
   end
   
-  specify "allow you to define nested auto_eval declarations" do
+  specify "allows you to define nested auto_eval declarations" do
     A::B::C::D.should == true
   end
 
