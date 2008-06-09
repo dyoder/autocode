@@ -15,7 +15,7 @@ spec = Gem::Specification.new do |s|
   s.name = "autocode"
   s.rubyforge_project = 'autocode'
   s.version = "1.0.0"
-  s.authors = ["Dan Yoder"]
+  s.authors = ["Dan Yoder", "Matthew King", "Lawrence Pitt"]
   s.email = 'dan@zeraweb.com'
   s.homepage = 'http://dev.zeraweb.com/'
   s.add_dependency 'metaid'
