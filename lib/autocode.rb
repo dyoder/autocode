@@ -35,7 +35,7 @@ module AutoCode
         @autocode[:constructors][ AutoCode.normalize( key ) ] << lambda do | cname |
           exemplar = ( options[:exemplar] || Module.new ).clone
           exemplar.module_eval( &block ) if block
-          const_set( cname, exemplar )
+          const_set( cname, exemplar ) and true
         end
       end
 
@@ -43,14 +43,11 @@ module AutoCode
       def auto_load( key = true, options = {} )
         @autocode[:constructors][ AutoCode.normalize( key ) ] << lambda do | cname |
           filename = AutoCode.snake_case( cname ) << '.rb'
-          if options[:directories].nil?
-            Kernel.load( filename ) if File.exist?( filename )
-          else
-            path = options[:directories].
-              map { |dir| File.join( dir.to_s, filename ) }.
-              find { |path| File.exist?( path ) }
-            Kernel.load( path ) unless path.nil?
-          end
+          options[:directories] ||= '.'
+          path = options[:directories].
+            map { |dir| File.join( dir.to_s, filename ) }.
+            find { |path| File.exist?( path ) }
+          Kernel.load( path ) unless path.nil?
         end
       end
 
@@ -83,11 +80,12 @@ module AutoCode
       (class << self ; self ; end ).instance_eval do
         define_method( :const_missing ) do | cname |
           constructors = @autocode[:constructors][true] + @autocode[:constructors][cname]
-          constructors.pop.call( cname ) until ( const_defined?( cname ) or constructors.empty? )
-          return old.call( cname ) unless const_defined?( cname )
+          constructors.reverse.find { | c | c.call( cname ) and const_defined?( cname ) }
+          return old.call( cname ) unless const_defined?( cname )          
           initializers = @autocode[:initializers][true] + @autocode[:initializers][cname]
-          mod = const_get( cname ) ; initializers.shift.call( mod ) until initializers.empty?
-          @autocode[:loaded] << cname ; const_get( cname )
+          mod = const_get( cname ); initializers.each { |init| init.call( mod ) }
+          @autocode[:loaded] << cname
+          mod
         end
       end
     end
