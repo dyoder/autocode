@@ -1,3 +1,5 @@
+1.0.0
+- Clarified intent of camel-casing constant names
 0.9.9 
 - Added auto_eval
 - Fixed loading bug for "multi-word" constants

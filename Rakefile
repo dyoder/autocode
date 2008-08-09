@@ -1,8 +1,6 @@
-require 'rubygems'
-require 'date'
-require 'rake/rdoctask'
-require 'rake/testtask'
-require 'fileutils'
+%w{ rubygems date rake/rdoctask rake/testtask fileutils }.each do |dep|
+  require dep
+end
 
 Gem::manage_gems
 include FileUtils
@@ -18,7 +16,6 @@ spec = Gem::Specification.new do |s|
   s.authors = ["Dan Yoder", "Matthew King", "Lawrence Pitt"]
   s.email = 'dan@zeraweb.com'
   s.homepage = 'http://dev.zeraweb.com/'
-  s.add_dependency 'metaid'
   s.summary  = "Utility for auto-including, reloading, and generating classes and modules."
   s.files = Dir['*/**/*']
   s.bindir = 'bin'
@@ -60,8 +57,6 @@ Rake::RDocTask.new do |rdoc|
 end
 
 Rake::TestTask.new(:test) do |t|
-  t.test_files = FileList["test/*.rb"].exclude("test/helpers.rb", "test_lib/**/*")
-  Dir.chdir 'test'
+  t.test_files = FileList["test/*.rb"].exclude("test/helpers.rb")
   t.verbose = true
-  Dir.chdir '..'
 end
