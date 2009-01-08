@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), 'helpers.rb')
+require "#{File.dirname(__FILE__)}/helpers"
 
 describe "auto_eval" do
 
@@ -27,5 +27,6 @@ describe "auto_eval" do
   specify "allows you to define nested auto_eval declarations" do
     A::B::C::D.should == true
   end
+  
 
 end

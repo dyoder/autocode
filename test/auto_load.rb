@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), 'helpers.rb')
+require "#{File.dirname(__FILE__)}/helpers"
 require 'extensions/io'
 
 
