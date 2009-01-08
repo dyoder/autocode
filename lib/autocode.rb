@@ -30,12 +30,38 @@ module AutoCode
         :loaded => []
       }
       
-      # Adds an auto_create block for the given key using the given exemplar if provided
+      def auto_constructor( key = true, &block)
+        @autocode[:constructors][ AutoCode.normalize( key ) ] << block
+      end
+      
       def auto_create( key = true, options = {}, &block )
-        @autocode[:constructors][ AutoCode.normalize( key ) ] << lambda do | cname |
-          exemplar = ( options[:exemplar] || Module.new ).clone
-          exemplar.module_eval( &block ) if block
-          const_set( cname, exemplar ) and true
+        auto_constructor( key ) do | cname |
+          exemplar = options[:exemplar] || Module.new
+          new_constant = exemplar.clone
+          new_constant.send(:include, AutoCode)
+          new_constant.module_eval( &block ) if block
+          const_set( cname, new_constant )
+        end
+      end
+      
+      # Convenience method for auto_creating classes.
+      def auto_create_class( key = true, parent = Object, &block )
+        auto_constructor( key ) do | cname |
+          parent = const_get(parent) unless parent.is_a? Class
+          new_constant = Class.new( parent )
+          new_constant.send(:include, AutoCode)
+          new_constant.module_eval( &block ) if block
+          const_set( cname, new_constant )
+        end
+      end
+
+      # Convenience method for auto_creating modules.
+      def auto_create_module( key = true, &block )
+        auto_constructor( key ) do | cname |
+          new_constant = Module.new
+          new_constant.send(:include, AutoCode)
+          new_constant.module_eval( &block ) if block
+          const_set( cname, new_constant )
         end
       end
 
@@ -53,20 +79,15 @@ module AutoCode
 
       # Adds an arbitrary initializer block for the given key
       def auto_eval( key, &block )
-        @autocode[:initializers][ AutoCode.normalize( key ) ] << lambda do | mod |
-          mod.module_eval( &block )
+        if key.is_a?( Symbol) && const_defined?( AutoCode.normalize( key ) )
+          const_get( key ).module_eval &block
+        else
+          @autocode[:initializers][ AutoCode.normalize( key ) ] << lambda do | mod |
+            mod.module_eval( &block )
+          end
         end
       end
 
-      # Convenience method for auto_create.
-      def auto_create_class( key = true, superclass = Object, &block )
-        auto_create( key,{ :exemplar => Class.new( superclass ) }, &block )
-      end
-
-      # Convenience method for auto_create.
-      def auto_create_module( key = true, &block )
-        auto_create( key,{ :exemplar => Module.new }, &block )
-      end
 
       # Returns the list of constants that would be reloaded upon a call to reload.
       def reloadable ; @autocode[:loaded] ; end
