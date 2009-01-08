@@ -12,4 +12,6 @@ Bacon::Context.instance_eval do
   alias_method :specify, :it
 end
 
-require "#{File.dirname(__FILE__)}/../lib/autocode"
+$:.unshift "#{File.dirname(__FILE__)}/../lib"
+
+require 'autocode'
