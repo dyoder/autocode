@@ -46,8 +46,9 @@ module AutoCode
           exemplar = options[:exemplar] || Module.new
           new_constant = exemplar.clone
           new_constant.send(:include, AutoCode)
+          ret = const_set( cname, new_constant )
           new_constant.module_eval( &block ) if block
-          const_set( cname, new_constant )
+          ret
         end
       end
       
@@ -57,8 +58,9 @@ module AutoCode
           parent = const_get(parent) unless parent.is_a? Class
           new_constant = Class.new( parent )
           new_constant.send(:include, AutoCode)
+          ret = const_set( cname, new_constant )
           new_constant.module_eval( &block ) if block
-          const_set( cname, new_constant )
+          ret
         end
       end
 
@@ -67,8 +69,9 @@ module AutoCode
         auto_constructor( key ) do | cname |
           new_constant = Module.new
           new_constant.send(:include, AutoCode)
+          ret = const_set( cname, new_constant )
           new_constant.module_eval( &block ) if block
-          const_set( cname, new_constant )
+          ret
         end
       end
 
