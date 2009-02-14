@@ -94,7 +94,10 @@ module AutoCode
           end
         end
       end
-
+      
+      def auto_const?(cname)
+        true unless @autocode[:constructors][ AutoCode.normalize( cname ) ].empty?
+      end
 
       # Returns the list of constants that would be reloaded upon a call to reload.
       def reloadable ; @autocode[:loaded] ; end
