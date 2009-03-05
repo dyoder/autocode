@@ -90,7 +90,7 @@ module AutoCode
       # Adds an arbitrary initializer block for the given key
       def auto_eval( key, &block )
         if key.is_a?( Symbol) && const_defined?( AutoCode.normalize( key ) )
-          const_get( key ).module_eval &block
+          const_get( key ).module_eval( &block)
         else
           @autocode[:initializers][ AutoCode.normalize( key ) ] << lambda do | mod |
             mod.module_eval( &block )
@@ -117,12 +117,18 @@ module AutoCode
       old = method( :const_missing )
       (class << self ; self ; end ).instance_eval do
         define_method( :const_missing ) do | cname |
+
           Autocode.monitor.synchronize do
             # check to see if some other thread loaded the constant before
             # we entered the lock.
             return const_get( cname ) if const_defined?( cname )
-            constructors = @autocode[:constructors][true] + @autocode[:constructors][cname]
-            constructors.reverse.find { | c | c.call( cname ) and const_defined?( cname ) }
+            constructors = @autocode[:constructors].map do |k,v|
+              # v
+              k == true || /V2/ === cname.to_s || k == cname 
+            end
+            # raise constructors.inspect
+            # constructors = @autocode[:constructors][true] + @autocode[:constructors][cname]
+            constructors.reverse.find { | a,c | c.call( cname ) and const_defined?( cname ) }
             return old.call( cname ) unless const_defined?( cname )          
             initializers = @autocode[:initializers][true] + @autocode[:initializers][cname]
             mod = const_get( cname ); initializers.each { |init| init.call( mod ) }
