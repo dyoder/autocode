@@ -3,11 +3,13 @@ module AutoCode
   # always make sure we have a camel-cased symbol
   def AutoCode.normalize( cname )
     return cname  unless cname.is_a? Symbol or cname.is_a? String
-    camel_case( cname )
+    camel_case( cname ).intern
   end
   
   def AutoCode.camel_case( cname )  
-    cname.to_s.gsub(/^([a-z])/) { $1.upcase }.gsub(/(_)(\w)/) { $2.upcase }.intern
+    cname.to_s.split('_').map do |word|
+      "#{word.slice(/^\w/).upcase}#{word.slice(/^\w(\w+)/, 1)}"
+    end.join
   end
   
   def AutoCode.snake_case( cname )
