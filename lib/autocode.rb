@@ -1,5 +1,10 @@
 module AutoCode
   
+  def self.monitor
+    require 'monitor'
+    @monitor ||= Monitor.new
+  end
+  
   # always make sure we have a camel-cased symbol
   def AutoCode.normalize( cname )
     return cname  unless cname.is_a? Symbol or cname.is_a? String
@@ -95,20 +100,29 @@ module AutoCode
       def reloadable ; @autocode[:loaded] ; end
 
       # Reloads (via #remove_const) all the constants that were loaded via auto_code.
-      def reload ; @autocode[:loaded].each { |name| remove_const( name ) } ; @autocode[:loaded] = [] ; end
+      def reload
+        Autocode.monitor.synchronize do
+          @autocode[:loaded].each { |name| remove_const( name ) } ; @autocode[:loaded] = []
+        end
+      end
 
       private
 
       old = method( :const_missing )
       (class << self ; self ; end ).instance_eval do
         define_method( :const_missing ) do | cname |
-          constructors = @autocode[:constructors][true] + @autocode[:constructors][cname]
-          constructors.reverse.find { | c | c.call( cname ) and const_defined?( cname ) }
-          return old.call( cname ) unless const_defined?( cname )          
-          initializers = @autocode[:initializers][true] + @autocode[:initializers][cname]
-          mod = const_get( cname ); initializers.each { |init| init.call( mod ) }
-          @autocode[:loaded] << cname
-          mod
+          Autocode.monitor.synchronize do
+            # check to see if some other thread loaded the constant before
+            # we entered the lock.
+            return const_get( cname ) if const_defined?( cname )
+            constructors = @autocode[:constructors][true] + @autocode[:constructors][cname]
+            constructors.reverse.find { | c | c.call( cname ) and const_defined?( cname ) }
+            return old.call( cname ) unless const_defined?( cname )          
+            initializers = @autocode[:initializers][true] + @autocode[:initializers][cname]
+            mod = const_get( cname ); initializers.each { |init| init.call( mod ) }
+            @autocode[:loaded] << cname
+            mod
+          end
         end
       end
     end
