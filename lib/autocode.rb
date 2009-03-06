@@ -122,13 +122,11 @@ module AutoCode
             # check to see if some other thread loaded the constant before
             # we entered the lock.
             return const_get( cname ) if const_defined?( cname )
-            constructors = @autocode[:constructors].map do |k,v|
-              # v
-              k == true || /V2/ === cname.to_s || k == cname 
+            actions = []
+            @autocode[:constructors].each do |matcher,action|
+              actions.concat action if (matcher == true || matcher == cname || matcher === cname.to_s )
             end
-            # raise constructors.inspect
-            # constructors = @autocode[:constructors][true] + @autocode[:constructors][cname]
-            constructors.reverse.find { | a,c | c.call( cname ) and const_defined?( cname ) }
+            actions.reverse!.find { | c | c.call( cname ) and const_defined?( cname ) }
             return old.call( cname ) unless const_defined?( cname )          
             initializers = @autocode[:initializers][true] + @autocode[:initializers][cname]
             mod = const_get( cname ); initializers.each { |init| init.call( mod ) }
@@ -141,3 +139,4 @@ module AutoCode
   end
 end
 Autocode = AutoCode
+

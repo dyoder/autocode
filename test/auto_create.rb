@@ -18,11 +18,11 @@ describe "auto_create" do
     end
   end
   
-  specify "allows you create and initialize a given const name" do
+  it "allows you create and initialize a given const name" do
     A::B.smurf.should == "blue"
   end
   
-  specify "allows you create and initialize const using a wildcard" do
+  it "allows you create and initialize const using a wildcard" do
     A::B::C.pixie.should == "brown"
   end
   
@@ -48,18 +48,21 @@ describe "auto_create" do
     L::WONK::KNOW.foo.should == "bar"
   end
   
-  specify "raises a NameError if a const doesn't match" do
+  it "raises a NameError if a const doesn't match" do
     lambda{ A::C }.should.raise NameError
   end
   
-  # it "can take a Regexp as a key" do
-  #   module M
-  #     include AutoCode
-  #     auto_create_module(/V\d+/) do
-  #       Thing = self.name.split("::").last.reverse
-  #     end
-  #   end
-  #   M::V2::Thing.should == "2V"
-  # end
+  it "can take a Regexp as a key" do
+    module M
+      include AutoCode
+      auto_create_module(/V\d+/) do
+        def self.thing
+          name.split("::").last.reverse
+        end
+      end
+    end
+    M::V2.thing.should == "2V"
+    M::V3.thing.should == "3V"
+  end
   
 end
