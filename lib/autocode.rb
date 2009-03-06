@@ -26,16 +26,21 @@ module AutoCode
   def self.included( mod )
     
     mod.instance_eval do
-
-      # First make sure we haven't already done this once
-      return unless @autocode.nil?
       
-      # Initialize bookkeeping variables needed by AutoCode
-      @autocode = { 
-        :constructors => Hash.new { |h,k| h[k] = [] },
-        :initializers => Hash.new { |h,k| h[k] = [] },
-        :loaded => []
-      }
+      AutoCode.monitor.enter
+      begin
+        # First make sure we haven't already done this once
+        return unless @autocode.nil?
+      
+        # Initialize bookkeeping variables needed by AutoCode
+        @autocode = { 
+          :constructors => Hash.new { |h,k| h[k] = [] },
+          :initializers => Hash.new { |h,k| h[k] = [] },
+          :loaded => []
+        }
+      ensure
+        AutoCode.monitor.exit
+      end
       
       def auto_constructor( key = true, &block)
         @autocode[:constructors][ AutoCode.normalize( key ) ] << block
